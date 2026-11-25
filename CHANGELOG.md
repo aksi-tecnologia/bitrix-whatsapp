@@ -18,6 +18,7 @@ Formato: `## [x.y.z] - AAAA-MM-DD`, seguido da lista de mudanças.
 ### Documentação
 - README completo: requisitos, instalação, opções, contrato do webhook, limitações, estrutura e solução de problemas.
 - A ajuda do webhook nas opções passa a citar os campos `mimeType` e `bitrixHost`.
+- Modelo de fluxo n8n para a transcrição em `n8n/`, com modo simples (devolve o texto) e completo (responde no chat e evita duplicidade).
 
 ## [0.2.0] - 2026-11-25
 

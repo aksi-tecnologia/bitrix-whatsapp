@@ -1,0 +1,452 @@
+{
+  "name": "Bitrix24 WhatsApp Skin – Transcrição de áudio (modelo)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Transcrição de áudio – Bitrix24 WhatsApp Skin\nRecebe o áudio enviado pela extensão e transcreve com a OpenAI.\n\n**Dois modos, escolhidos pela URL configurada na extensão:**\n- `.../bitrix-transcricao?return=true` → só transcreve e devolve `{\"text\": ...}`. A extensão mostra o texto e, se a opção estiver ligada, ela mesma responde no chat. Precisa só da credencial OpenAI.\n- `.../bitrix-transcricao` (sem `return`) → o n8n transcreve, responde no chat com mensagem oculta pelo webhook do Bitrix e registra numa Data Table para não transcrever o mesmo áudio duas vezes. Precisa de OpenAI, Redis, Data Table e do webhook do Bitrix.\n\n**Configurar:** veja `n8n/README.md` no repositório.",
+        "height": 400,
+        "width": 620,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -480
+      ],
+      "id": "888ee994-b690-4afe-a316-e981cdac7e0d",
+      "name": "Leia-me"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bitrix-transcricao",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -576,
+        16
+      ],
+      "id": "34d773f1-76f6-4030-a803-be8f90b08b5c",
+      "name": "Webhook",
+      "webhookId": "fd3f6b4c-2b27-454f-a19b-3c1c9f85eeb0"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "audio",
+        "options": {
+          "language": "pt"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        992,
+        -48
+      ],
+      "id": "eade4bff-50cb-42ec-9372-741bf81b94f3",
+      "name": "Transcrever (OpenAI)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ee57c7a2-d903-4ea7-af19-9f7c532900ac",
+              "leftValue": "={{$json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        96,
+        0
+      ],
+      "id": "a4177f3c-6c3b-4f80-8a13-30a45056fedb",
+      "name": "Ainda não transcrito"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Webhook').all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        -48
+      ],
+      "id": "e61b3aa8-5a72-4443-bf39-520c235733f6",
+      "name": "Recuperar áudio"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://SEU-PORTAL.bitrix24.com.br/rest/ID_USUARIO/TOKEN_DO_WEBHOOK/im.message.add",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"DIALOG_ID\": \"{{ $('Webhook').item.json.body.dialogId }}\",\n  \"MESSAGE\": {{ ('🎙 Transcrição do áudio #' + $('Webhook').item.json.body.messageId + ':\\n' + $json.text).toJsonString() }},\n  \"SYSTEM\": \"Y\",\n  \"REPLY_ID\": \"{{ $('Webhook').item.json.body.messageId }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1216,
+        -48
+      ],
+      "id": "e13f1800-5ce7-48ad-9c1a-ad7d0e1d5c58",
+      "name": "Responder no chat (Bitrix)",
+      "notes": "Troque pela URL do seu webhook de entrada do Bitrix24 (permissão im). Não monte a URL com o bitrixHost recebido: qualquer um poderia mandar outro host e receber o seu token."
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "messageId",
+              "keyValue": "={{ $json.body.messageId }}"
+            },
+            {
+              "keyName": "audioId",
+              "keyValue": "={{ $json.body.fileName }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "fcbbfe80-1a84-4778-bf1b-e5de17a29468",
+      "name": "Já transcrito? (buscar)",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "dadosCompletos": "={{ $('Webhook').item.json.body.toJsonString() }}",
+            "messageId": "={{ $('Webhook').item.json.body.messageId }}",
+            "audioId": "={{ $('Webhook').item.json.body.fileName }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "dadosCompletos",
+              "displayName": "dadosCompletos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "messageId",
+              "displayName": "messageId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "audioId",
+              "displayName": "audioId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        -48
+      ],
+      "id": "92aa6063-8910-4c47-ab25-24b5076f6bbf",
+      "name": "Registrar transcrição"
+    },
+    {
+      "parameters": {
+        "operation": "incr",
+        "key": "=lock:audio:{{ $('Webhook').item.json.body.messageId }}",
+        "expire": true,
+        "ttl": 300
+      },
+      "id": "82a1da30-e3f0-4980-90ed-2923fef2ed36",
+      "name": "Trava (Redis)",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -48
+      ],
+      "notes": "INCR atômico: só a 1ª execução recebe 1. Expira em 5 min para liberar nova tentativa se a transcrição falhar."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "13e83efe-84c6-4c89-ae8d-7475dbb41df5",
+              "leftValue": "={{ Object.values($json)[0] }}",
+              "operator": {
+                "operation": "equals",
+                "type": "number"
+              },
+              "rightValue": 1
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          }
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "724bbbbd-d0de-42ff-a4f4-dba2103a10c8",
+      "name": "Trava livre?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        544,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d214a9f4-e34a-44b4-9722-8f2c5b23d325",
+              "leftValue": "={{ $json.query?.return ?? \"false\" }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -352,
+        16
+      ],
+      "id": "856cbce3-8488-4acf-bfda-d828cef818a5",
+      "name": "Modo devolver texto?"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "audio",
+        "options": {
+          "language": "pt"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        -80,
+        208
+      ],
+      "id": "4384eba7-e50c-41ad-abce-214da620b3a6",
+      "name": "Transcrever e devolver (OpenAI)"
+    },
+    {
+      "parameters": {
+        "content": "### Modo completo: preencha\n1. **Já transcrito? / Registrar transcrição**: escolha a Data Table (colunas `messageId`, `audioId`, `dadosCompletos`, todas texto).\n2. **Trava (Redis)**: credencial do Redis.\n3. **Transcrever**: credencial da OpenAI.\n4. **Responder no chat**: URL do webhook de entrada do seu Bitrix24.",
+        "height": 240,
+        "width": 520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -400
+      ],
+      "id": "bd3fdadd-f1c1-495b-af30-37f633e26b19",
+      "name": "Configurar aqui"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Modo devolver texto?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcrever (OpenAI)": {
+      "main": [
+        [
+          {
+            "node": "Responder no chat (Bitrix)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar áudio": {
+      "main": [
+        [
+          {
+            "node": "Transcrever (OpenAI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder no chat (Bitrix)": {
+      "main": [
+        [
+          {
+            "node": "Registrar transcrição",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Já transcrito? (buscar)": {
+      "main": [
+        [
+          {
+            "node": "Ainda não transcrito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ainda não transcrito": {
+      "main": [
+        [
+          {
+            "node": "Trava (Redis)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trava (Redis)": {
+      "main": [
+        [
+          {
+            "node": "Trava livre?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trava livre?": {
+      "main": [
+        [
+          {
+            "node": "Recuperar áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modo devolver texto?": {
+      "main": [
+        [
+          {
+            "node": "Já transcrito? (buscar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transcrever e devolver (OpenAI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

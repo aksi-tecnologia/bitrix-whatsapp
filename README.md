@@ -14,7 +14,7 @@ Versão atual: **0.2.1** (veja o [Histórico de versões](#histórico-de-versõe
 - Google Chrome (ou outro navegador baseado em Chromium) recente. O recurso `world: "MAIN"` dos content scripts exige Chrome 111 ou mais novo.
 - Portal Bitrix24 em nuvem, em `*.bitrix24.com.br` ou `*.bitrix24.com`. Outros domínios precisam de ajuste (veja [Limitações](#limitações)).
 - Para o botão "Ligar por…": telefonia configurada no portal e usuário com permissão para fazer chamadas.
-- Para a transcrição: um webhook (por exemplo, um fluxo do n8n) que receba o áudio e devolva o texto.
+- Para a transcrição: um webhook que receba o áudio e devolva o texto. Há um modelo pronto para o n8n em [`n8n/`](n8n/README.md).
 
 ## Instalação
 
@@ -74,6 +74,9 @@ O `#<messageId>` permite que outras pessoas com a extensão vejam que aquele áu
 
 #### Contrato do webhook
 
+> Modelo pronto para importar no n8n (com OpenAI): [`n8n/transcricao-audio.json`](n8n/transcricao-audio.json). Como configurar: [`n8n/README.md`](n8n/README.md).
+
+
 `POST multipart/form-data`, chamado pelo service worker da extensão (fora das regras de CORS da página). Tempo limite: 2 minutos.
 
 | Campo | Conteúdo |
@@ -113,6 +116,7 @@ manifest.json            configuração da extensão (versão, permissões, cont
 background.js            service worker: envia o áudio ao webhook de transcrição
 options.html / .js       tela de opções e popup (configurações, linhas, discador)
 icons/                   ícones 16, 48 e 128 px
+n8n/                     modelo de fluxo n8n para a transcrição (não vai no zip da extensão)
 content/
   content.js             ativação no Canal Aberto, gravador, player e transcrição
   recorder.js            captura do microfone e codificação Opus
