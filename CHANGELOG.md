@@ -1,0 +1,30 @@
+# Histórico de versões
+
+Cada versão nova vira uma Release no GitHub com o zip da extensão. O texto da
+Release é a seção da versão neste arquivo, então escreva aqui o que mudou
+**antes** de subir o `version` no `manifest.json`.
+
+Formato: `## [x.y.z] - AAAA-MM-DD`, seguido da lista de mudanças.
+
+## [0.2.1] - 2026-11-25
+
+### Novo
+- Prévia do áudio gravado antes de enviar: ao parar a gravação, o compositor mostra um mini player com descartar, ouvir, barra de tempo e enviar. Só o enviar anexa o áudio ao chat.
+- Opção "Ouvir o áudio gravado antes de enviar" (ligada por padrão). Desmarcada, o áudio é anexado direto, como antes.
+
+### Corrigido
+- Texto invisível em "Conversa #… iniciada" no bate-papo com o tema WhatsApp.
+
+### Documentação
+- README completo: requisitos, instalação, opções, contrato do webhook, limitações, estrutura e solução de problemas.
+- A ajuda do webhook nas opções passa a citar os campos `mimeType` e `bitrixHost`.
+
+## [0.2.0] - 2026-11-25
+
+### Novo
+- Botão "Ligar por…" nas fichas de contato, lead, empresa e negócio e no cabeçalho do Canal Aberto, com escolha da linha de saída.
+- Discador para qualquer número e ordem/visibilidade das linhas nas opções.
+
+## [0.1.x]
+
+- Tema WhatsApp no Canal Aberto, gravador em OGG/Opus, player com velocidade e transcrição via webhook (n8n).

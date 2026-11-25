@@ -18,7 +18,7 @@ Versão atual: **0.2.1** (veja o [Histórico de versões](#histórico-de-versõe
 
 ## Instalação
 
-1. Baixe o repositório: **Code → Download ZIP** e descompacte, ou `git clone` desta URL.
+1. Baixe o zip da última versão em **Releases** (lado direito da página do repositório no GitHub) e descompacte. Também dá para usar `git clone`.
 2. Abra `chrome://extensions`.
 3. Ative o **Modo do desenvolvedor** (canto superior direito).
 4. Clique em **Carregar sem compactação** e selecione a pasta que contém o `manifest.json`.
@@ -134,9 +134,15 @@ content/
 
 ## Histórico de versões
 
-- **0.2.1** – prévia do áudio gravado antes de enviar (com opção para desligar); correção do texto invisível em "Conversa #… iniciada" no tema; README completo.
-- **0.2.0** – botão "Ligar por…" com escolha de linha nas fichas do CRM e no Canal Aberto; discador e ordem/visibilidade das linhas nas opções.
-- **0.1.x** – tema WhatsApp, gravador em OGG/Opus, player com velocidade e transcrição via webhook.
+O que mudou em cada versão está no [CHANGELOG.md](CHANGELOG.md).
+
+### Publicar uma versão nova
+
+1. Escreva a seção da versão no topo do `CHANGELOG.md` (`## [x.y.z] - AAAA-MM-DD`).
+2. Suba o `version` no `manifest.json`.
+3. Faça commit e push no `main`.
+
+O GitHub Actions (`.github/workflows/release.yml`) cria a tag `vx.y.z` e uma Release com o zip da extensão e as notas do CHANGELOG. Push sem mudança de versão não gera Release.
 
 ## Licença
 

@@ -1,0 +1,67 @@
+# Gera uma Release com o zip da extensão sempre que a versão do manifest.json muda no main.
+# O texto da Release vem da seção "## [versão]" do CHANGELOG.md.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: [manifest.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versão do manifest
+        id: v
+        run: |
+          VERSION=$(jq -r .version manifest.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verificar se a versão já foi publicada
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.v.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Release ${{ steps.v.outputs.tag }} já existe, nada a fazer."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Montar o zip
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          ZIP="bitrix-whatsapp-${{ steps.v.outputs.tag }}.zip"
+          zip -r "$ZIP" manifest.json background.js options.html options.js content icons LICENSE
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+
+      - name: Extrair notas do CHANGELOG
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          awk -v ver="${{ steps.v.outputs.version }}" '
+            $0 ~ "^## \\[" ver "\\]" { on=1; next }
+            on && /^## / { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "Sem seção para ${{ steps.v.outputs.version }} no CHANGELOG.md." > notes.md
+          fi
+          printf '\n---\n**Instalar:** baixe o zip abaixo, descompacte, abra `chrome://extensions`, ative o Modo do desenvolvedor e use **Carregar sem compactação** na pasta. Para atualizar, substitua a pasta e clique em recarregar na extensão.\n' >> notes.md
+
+      - name: Publicar Release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.v.outputs.tag }}" "$ZIP" \
+            --title "${{ steps.v.outputs.tag }}" \
+            --notes-file notes.md \
+            --target "${{ github.sha }}"
