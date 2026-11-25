@@ -50,7 +50,7 @@
   <h2>Transcrição</h2>
   <label class="col"><span>URL do webhook (n8n)</span>
     <input type="url" id="webhookUrl" placeholder="https://n8n.exemplo.com/webhook/transcrever">
-    <small>Recebe multipart/form-data com o arquivo <code>audio</code> e os campos dialogId, chatId, messageId, fileId, fileName, publicUrl. Deve responder <code>{"text": "..."}</code>.</small>
+    <small>Recebe multipart/form-data com o arquivo <code>audio</code> e os campos dialogId, chatId, messageId, fileId, fileName, mimeType, publicUrl, bitrixHost. Deve responder <code>{"text": "..."}</code>.</small>
   </label>
   <label class="col"><span>Token (opcional)</span>
     <input type="password" id="webhookToken" placeholder="enviado como Authorization: Bearer …">
