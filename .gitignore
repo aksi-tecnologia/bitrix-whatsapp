@@ -1,0 +1,10 @@
+# backups e pacotes gerados
+_backup-*/
+*.zip
+*.crx
+*.pem
+
+# sistema
+.DS_Store
+Thumbs.db
+desktop.ini
