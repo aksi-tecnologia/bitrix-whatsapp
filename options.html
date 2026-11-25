@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Bitrix24 WhatsApp Skin</title>
+<style>
+  body { font: 14px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; color: #111b21; margin: 0; padding: 16px 18px; min-width: 340px; max-width: 560px; background: #fff; }
+  h1 { font-size: 16px; margin: 0 0 12px; color: #008069; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #667781; margin: 18px 0 6px; }
+  label.row { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  label.col { display: block; padding: 6px 0; }
+  label.col span { display: block; margin-bottom: 4px; }
+  input[type=text], input[type=url], input[type=password], input[type=tel], select { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #d1d7db; border-radius: 8px; font: inherit; background: #fff; }
+  input[type=checkbox] { width: 16px; height: 16px; accent-color: #00a884; }
+  small { color: #667781; display: block; margin-top: 3px; }
+  button { margin-top: 14px; background: #00a884; color: #fff; border: 0; border-radius: 20px; padding: 8px 20px; font: inherit; font-weight: 600; cursor: pointer; }
+  #status, #dialStatus { margin-left: 10px; color: #008069; }
+  #status.err, #dialStatus.err { color: #c0392b; }
+  .dial { display: flex; gap: 8px; align-items: center; }
+  .dial button { margin-top: 0; flex: 0 0 auto; }
+  #lines { list-style: none; margin: 0; padding: 0; }
+  #lines li { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  #lines li span { flex: 1 1 auto; }
+  #lines li button { margin: 0; padding: 2px 8px; border-radius: 6px; background: #f0f2f5; color: #54656f; font-weight: 400; }
+  #lines li.off span { color: #8696a0; text-decoration: line-through; }
+</style>
+</head>
+<body>
+  <h1>Bitrix24 WhatsApp Skin</h1>
+
+  <h2>Ligar para qualquer número</h2>
+  <label class="col"><span>Número</span><input type="tel" id="dialNumber" placeholder="(65) 99999-0000"></label>
+  <div class="dial">
+    <select id="dialLine"><option value="">Carregando linhas…</option></select>
+    <button id="dialBtn">Ligar</button>
+  </div>
+  <small>A chamada abre na aba do Bitrix24 que estiver aberta.</small>
+  <span id="dialStatus"></span>
+
+  <h2>Linhas no menu "Ligar por…"</h2>
+  <ul id="lines"><li><span>Abra o Bitrix24 numa aba para carregar as linhas.</span></li></ul>
+  <small>Desmarque para esconder uma linha. Use ↑ ↓ para mudar a ordem. Clique em Salvar no fim da página.</small>
+
+  <h2>Aparência</h2>
+  <label class="row"><input type="checkbox" id="theme"> Tema WhatsApp</label>
+  <label class="row"><input type="checkbox" id="player"> Player de áudio dentro da mensagem</label>
+  <label class="row"><input type="checkbox" id="recorder"> Botão de gravar áudio</label>
+
+  <h2>Transcrição</h2>
+  <label class="col"><span>URL do webhook (n8n)</span>
+    <input type="url" id="webhookUrl" placeholder="https://n8n.exemplo.com/webhook/transcrever">
+    <small>Recebe multipart/form-data com o arquivo <code>audio</code> e os campos dialogId, chatId, messageId, fileId, fileName, publicUrl. Deve responder <code>{"text": "..."}</code>.</small>
+  </label>
+  <label class="col"><span>Token (opcional)</span>
+    <input type="password" id="webhookToken" placeholder="enviado como Authorization: Bearer …">
+  </label>
+  <label class="row"><input type="checkbox" id="postReply"> Responder o áudio com a transcrição em mensagem oculta</label>
+  <label class="row"><input type="checkbox" id="autoTranscribe"> Transcrever automaticamente áudios do cliente recebidos hoje (os mais antigos, só pelo botão)</label>
+
+  <button id="save">Salvar</button><span id="status"></span>
+  <script src="options.js"></script>
+</body>
+</html>

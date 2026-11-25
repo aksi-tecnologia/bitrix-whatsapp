@@ -1,0 +1,228 @@
+/* Tema WhatsApp para o messenger do Bitrix24 (im v2).
+   Tudo fica atrás de html.wabx-theme, classe que o content script só liga quando
+   a lista de Canal Aberto existe na página e o tema está ativo nas opções. */
+
+html.wabx-theme {
+  --wa-bg: #efeae2;
+  --wa-panel: #f0f2f5;
+  --wa-in: #ffffff;
+  --wa-out: #d9fdd3;
+  --wa-text: #111b21;
+  --wa-sub: #667781;
+  --wa-icon: #54656f;
+  --wa-green: #00a884;
+  --wa-unread: #25d366;
+  --wa-link: #027eb5;
+  --wa-line: #e9edef;
+  --wa-shadow: 0 1px .5px rgba(11, 20, 26, .13);
+  --wa-font: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, sans-serif;
+}
+
+/* ---------- lista de conversas ---------- */
+html.wabx-theme .bx-imol-list-container-recent__container {
+  background: #fff !important;
+  font-family: var(--wa-font);
+  border-right: 1px solid var(--wa-line);
+}
+html.wabx-theme .bx-imol-list-container-recent__header_container {
+  background: #fff !important;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+html.wabx-theme .bx-imol-list-container-recent__container .bx-im-search-input__container {
+  background: var(--wa-panel) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+html.wabx-theme .bx-imol-list-container-recent__container .bx-im-search-input__element {
+  background: transparent !important;
+  color: var(--wa-text) !important;
+  font-family: var(--wa-font);
+}
+html.wabx-theme .bx-imol-list-recent__group_name,
+html.wabx-theme .bx-imol-list-recent__date-group_name {
+  color: #008069 !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+html.wabx-theme .bx-imol-list-recent__item {
+  background: #fff !important;
+  border-radius: 0 !important;
+  box-shadow: inset 0 -1px 0 var(--wa-line);
+}
+html.wabx-theme .bx-imol-list-recent__item:hover { background: #f5f6f6 !important; }
+html.wabx-theme .bx-imol-list-recent__item.--selected { background: var(--wa-panel) !important; }
+html.wabx-theme .bx-imol-list-recent__item .bx-im-chat-title__text {
+  color: var(--wa-text) !important;
+  font: 400 16px/21px var(--wa-font) !important;
+}
+html.wabx-theme .bx-imol-list-recent__item .bx-imol-list-recent-item__message_text,
+html.wabx-theme .bx-imol-list-recent__item .bx-imol-list-recent-item__message {
+  color: var(--wa-sub) !important;
+  font: 400 13.5px/20px var(--wa-font) !important;
+}
+html.wabx-theme .bx-imol-list-recent__item .bx-imol-list-recent-item__content_date {
+  color: var(--wa-sub) !important;
+  font-size: 12px !important;
+}
+html.wabx-theme .bx-imol-list-recent-item__counter_container .ui-counter,
+html.wabx-theme .bx-imol-list-recent-item__counter_container [class*="counter"] {
+  --ui-counter-bg-color: var(--wa-unread);
+  --ui-counter-current-bg-color: var(--wa-unread);
+  background-color: var(--wa-unread) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+html.wabx-theme .bx-imol-list-recent-item__counter_container { background-color: transparent !important; }
+
+/* ---------- área da conversa ---------- */
+html.wabx-theme .bx-im-content-chat__container {
+  background-color: var(--wa-bg) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' fill='none' stroke='%23000' stroke-opacity='.045' stroke-width='1.4' stroke-linecap='round'%3E%3Ccircle cx='18' cy='20' r='6'/%3E%3Cpath d='M52 12l8 8m0-8l-8 8M92 16h14v10H98l-6 5z'/%3E%3Cpath d='M14 62c5-6 11-6 16 0s11 6 16 0'/%3E%3Crect x='66' y='52' width='14' height='14' rx='3'/%3E%3Cpath d='M100 58a6 6 0 1 1 0 .1M24 98l6-10 6 10zM60 92v14m-7-7h14M94 96c4-5 10-5 14 0'/%3E%3C/svg%3E") !important;
+  background-repeat: repeat !important;
+  background-size: 120px 120px !important;
+  background-position: 0 0 !important;
+  font-family: var(--wa-font);
+}
+
+/* cabeçalho */
+html.wabx-theme .bx-im-chat-header__container {
+  background: var(--wa-panel) !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid var(--wa-line) !important;
+  --ui-icon-set__icon-color: var(--wa-icon);
+}
+html.wabx-theme .bx-im-chat-header__container .bx-im-chat-title__text {
+  color: var(--wa-text) !important;
+  font: 500 16px/21px var(--wa-font) !important;
+}
+html.wabx-theme .bx-im-chat-header__container .bx-im-chat-header__subtitle_content,
+html.wabx-theme .bx-im-chat-header__container .bx-im-chat-header-action__content {
+  color: var(--wa-sub) !important;
+  font-family: var(--wa-font);
+}
+html.wabx-theme .bx-im-chat-header__container .ui-icon-set {
+  --ui-icon-set__icon-color: var(--wa-icon) !important;
+}
+
+/* separador de data e mensagens de sistema: pílulas centralizadas */
+html.wabx-theme .bx-im-message-list-date-group-title__text {
+  background: rgba(255, 255, 255, .95) !important;
+  color: var(--wa-icon) !important;
+  border-radius: 7.5px !important;
+  box-shadow: var(--wa-shadow) !important;
+  font: 400 12.5px/21px var(--wa-font) !important;
+  padding: 3px 12px !important;
+  text-transform: uppercase;
+  backdrop-filter: none !important;
+}
+html.wabx-theme .bx-im-message-base__wrap.--system .bx-im-message-default__container,
+html.wabx-theme .bx-imol-message-start-dialog__text {
+  background: rgba(255, 255, 255, .92) !important;
+  color: var(--wa-icon) !important;
+  border-radius: 7.5px !important;
+  box-shadow: var(--wa-shadow) !important;
+  font: 400 12.5px/19px var(--wa-font) !important;
+  padding: 5px 12px !important;
+}
+html.wabx-theme .bx-im-message-base__wrap.--system .bx-im-message-text-content__container {
+  color: var(--wa-icon) !important;
+  font-size: 12.5px !important;
+}
+/* balões */
+html.wabx-theme .bx-im-message-base__wrap {
+  --im-message-base__background-color: var(--wa-in);
+  --im-message-base__background-color_self: var(--wa-out);
+}
+html.wabx-theme .bx-im-message-base__body:not(.--transparent) {
+  background: var(--wa-in) !important;
+  color: var(--wa-text) !important;
+  border-radius: 7.5px !important;
+  box-shadow: var(--wa-shadow) !important;
+}
+html.wabx-theme .bx-im-message-base__wrap.--self .bx-im-message-base__body:not(.--transparent) {
+  background: var(--wa-out) !important;
+}
+html.wabx-theme .bx-im-message-base__wrap.--opponent .bx-im-message-base__body:not(.--transparent) { border-top-left-radius: 0 !important; }
+html.wabx-theme .bx-im-message-base__wrap.--self .bx-im-message-base__body:not(.--transparent) { border-top-right-radius: 0 !important; }
+html.wabx-theme .bx-im-message-base__wrap.--has-error .bx-im-message-base__body:not(.--transparent) {
+  box-shadow: var(--wa-shadow), inset 3px 0 0 #ea0038 !important;
+}
+html.wabx-theme .bx-im-message-text-content__container {
+  color: var(--wa-text) !important;
+  font: 400 14.2px/19px var(--wa-font) !important;
+}
+html.wabx-theme .bx-im-message-text-content__container a { color: var(--wa-link) !important; }
+html.wabx-theme .bx-im-message-author-title__container .bx-im-chat-title__text {
+  font: 500 12.8px/22px var(--wa-font) !important;
+}
+html.wabx-theme .bx-im-message-status__date,
+html.wabx-theme .bx-im-message-status__edit-mark,
+html.wabx-theme .bx-imol-message-hidden-content__date {
+  color: var(--wa-sub) !important;
+  font: 400 11px/15px var(--wa-font) !important;
+}
+
+/* citação dentro do balão */
+html.wabx-theme .bx-im-message-quote {
+  background: rgba(11, 20, 26, .05) !important;
+  border-radius: 7.5px !important;
+  border-left: 4px solid #06cf9c !important;
+  margin: 4px 0 !important;
+}
+html.wabx-theme .bx-im-message-quote__wrap { border: 0 !important; padding: 6px 10px !important; }
+html.wabx-theme .bx-im-message-quote__text { color: var(--wa-sub) !important; font-size: 13px !important; }
+
+/* mensagem oculta (visível só para a equipe): nota amarela */
+html.wabx-theme .bx-imol-message-hidden__content {
+  background: #fff8c5 !important;
+  color: var(--wa-text) !important;
+  border-radius: 7.5px !important;
+  box-shadow: var(--wa-shadow) !important;
+  border: 0 !important;
+}
+html.wabx-theme .bx-imol-message-hidden-content__text {
+  color: var(--wa-text) !important;
+  font: 400 14.2px/19px var(--wa-font) !important;
+  white-space: pre-wrap;
+}
+
+/* anexo de arquivo dentro do balão */
+html.wabx-theme .bx-im-base-file-item__container {
+  background: rgba(11, 20, 26, .05) !important;
+  border-radius: 6px !important;
+}
+html.wabx-theme .bx-im-base-file-item__title { color: var(--wa-text) !important; }
+html.wabx-theme .bx-im-base-file-item__size { color: var(--wa-sub) !important; }
+
+/* ---------- compositor ---------- */
+html.wabx-theme .bx-im-send-panel__container {
+  background: var(--wa-panel) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+html.wabx-theme .bx-im-content-chat__textarea_container { background: var(--wa-panel) !important; }
+html.wabx-theme .bx-im-textarea__container {
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+html.wabx-theme .bx-im-textarea__element {
+  color: var(--wa-text) !important;
+  font: 400 15px/22px var(--wa-font) !important;
+}
+html.wabx-theme .bx-im-textarea__element::placeholder { color: var(--wa-sub) !important; }
+/* só os botões do próprio textarea (anexo, emoji, apps). Os ícones do Canal Aberto
+   (.bx-imol-textarea-icon: modo oculto, respostas prontas…) ficam com a cor nativa,
+   senão o estado ativo do "olho" deixa de aparecer. */
+html.wabx-theme .bx-im-textarea__icon > .ui-icon-set { --ui-icon-set__icon-color: var(--wa-icon) !important; }
+html.wabx-theme .bx-im-elements-send-button {
+  background-color: var(--wa-green) !important;
+  border-radius: 50% !important;
+}
+html.wabx-theme .bx-im-elements-send-button.--disabled { opacity: .45; }

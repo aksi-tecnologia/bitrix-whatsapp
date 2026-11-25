@@ -1,0 +1,78 @@
+/* Componentes próprios da extensão (independem do tema estar ligado). */
+
+/* botão de microfone no compositor */
+.wabx-mic {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; margin: 0 4px; padding: 0; flex: 0 0 auto;
+  border: 0; border-radius: 50%; background: transparent; color: #54656f; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.wabx-mic:hover { background: rgba(11, 20, 26, .08); color: #00a884; }
+
+/* barra de gravação: cobre o compositor enquanto grava */
+html.wabx-on .bx-im-send-panel__container { position: relative; }
+.wabx-rec-bar {
+  position: absolute; inset: 0; z-index: 50;
+  display: flex; align-items: center; gap: 12px; padding: 0 16px;
+  background: #f0f2f5; border-radius: inherit;
+  font: 400 15px/1 "Segoe UI", Helvetica, Arial, sans-serif; color: #111b21;
+}
+.wabx-rec-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; flex: 0 0 auto;
+}
+.wabx-rec-cancel { background: transparent; color: #54656f; }
+.wabx-rec-cancel:hover { background: rgba(11, 20, 26, .08); color: #ea0038; }
+.wabx-rec-send { background: #00a884; color: #fff; }
+.wabx-rec-send:hover { background: #008f72; }
+.wabx-rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ea0038; flex: 0 0 auto; animation: wabx-blink 1.2s infinite; }
+.wabx-rec-time { min-width: 40px; font-variant-numeric: tabular-nums; }
+.wabx-rec-wave { flex: 1 1 auto; min-width: 60px; height: 32px; }
+@keyframes wabx-blink { 50% { opacity: .25; } }
+
+/* player de áudio no balão */
+.wabx-audio-replaced { display: none !important; }
+.wabx-player { min-width: 270px; max-width: 360px; padding: 4px 2px 2px; font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
+.wabx-player-row { display: flex; align-items: center; gap: 6px; }
+.wabx-play {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: #54656f; cursor: pointer; flex: 0 0 auto;
+}
+.wabx-play:hover { background: rgba(11, 20, 26, .08); }
+.wabx-track { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding-top: 12px; }
+.wabx-seek {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 4px; margin: 0; cursor: pointer;
+  border-radius: 2px; outline: none;
+  background: linear-gradient(to right, #00a884 var(--wabx-p, 0%), rgba(11, 20, 26, .2) var(--wabx-p, 0%));
+}
+.wabx-seek::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #00a884; }
+.wabx-time { font-size: 11px; line-height: 15px; color: #667781; font-variant-numeric: tabular-nums; }
+.wabx-speed {
+  min-width: 34px; height: 22px; padding: 0 6px; border: 0; border-radius: 11px;
+  background: rgba(11, 20, 26, .1); color: #54656f; font-size: 11px; font-weight: 600; line-height: 22px; cursor: pointer; flex: 0 0 auto;
+}
+.wabx-tr-btn, .wabx-dl {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: #8696a0; cursor: pointer; flex: 0 0 auto;
+}
+.wabx-tr-btn:hover, .wabx-dl:hover { background: rgba(11, 20, 26, .08); color: #00a884; }
+.wabx-has-tr .wabx-tr-btn { display: none; }
+.wabx-busy .wabx-tr-btn { pointer-events: none; animation: wabx-blink 1s infinite; color: #00a884; }
+.wabx-transcript {
+  margin: 6px 4px 2px; padding: 6px 0 0; border-top: 1px solid rgba(11, 20, 26, .1);
+  font-size: 13px; line-height: 18px; color: #3b4a54; font-style: italic; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.wabx-transcript[hidden] { display: none; }
+
+/* aviso flutuante */
+#wabx-toast {
+  position: fixed; left: 50%; bottom: 28px; z-index: 2147483000;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  max-width: 440px; padding: 10px 16px; border-radius: 8px;
+  background: #111b21; color: #fff; font: 400 13.5px/18px "Segoe UI", Helvetica, Arial, sans-serif;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .25); transition: opacity .2s, transform .2s;
+}
+#wabx-toast.wabx-show { opacity: 1; transform: translate(-50%, 0); }
+#wabx-toast.wabx-err { background: #b3261e; }

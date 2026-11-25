@@ -1,0 +1,33 @@
+/* Botão "Ligar por…" e o menu de linhas. */
+.wabx-call-btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; margin: 0 8px 0 0; padding: 0 12px;
+  border: 1px solid #00a884; border-radius: 16px; background: #00a884; color: #fff; cursor: pointer;
+  font: 600 13px/1 "Segoe UI", Helvetica, Arial, sans-serif; white-space: nowrap; flex: 0 0 auto; vertical-align: middle;
+}
+.wabx-call-btn:hover { background: #008f72; border-color: #008f72; }
+.wabx-call-btn.wabx-call-nophone { background: #fff; color: #667781; border-color: #d1d7db; }
+.wabx-call-btn.wabx-call-nophone:hover { background: #f0f2f5; }
+.wabx-call-btn.wabx-call-float { position: fixed; top: 12px; right: 90px; z-index: 1000; }
+
+.wabx-call-menu {
+  position: fixed; z-index: 2147483000; width: 260px; max-height: 70vh; overflow: auto; padding: 8px;
+  background: #fff; color: #111b21; border-radius: 12px; box-shadow: 0 6px 24px rgba(11, 20, 26, .22);
+  font: 400 13px/1.35 "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.wabx-call-title { margin: 6px 6px 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: #667781; }
+.wabx-call-opt { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 8px; cursor: pointer; }
+.wabx-call-opt:hover { background: #f0f2f5; }
+.wabx-call-opt input[type=radio] { accent-color: #00a884; margin: 0; }
+.wabx-call-input { flex: 1 1 auto; min-width: 0; padding: 6px 8px; border: 1px solid #d1d7db; border-radius: 8px; font: inherit; }
+.wabx-call-line {
+  display: block; width: 100%; margin: 2px 0; padding: 8px 10px; text-align: left; cursor: pointer;
+  border: 0; border-radius: 8px; background: transparent; color: #111b21; font: inherit;
+}
+.wabx-call-line:hover { background: #d9fdd3; }
+.wabx-call-hint, .wabx-call-loading { padding: 4px 6px; color: #667781; }
+.wabx-call-err { padding: 0 6px; color: #c0392b; }
+.wabx-call-err:empty { display: none; }
+.wabx-call-toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 2147483001;
+  padding: 10px 16px; border-radius: 8px; background: #c0392b; color: #fff; font: 13px "Segoe UI", Arial, sans-serif;
+}

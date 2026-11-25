@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Bitrix24 WhatsApp Skin",
+  "short_name": "BX WhatsApp",
+  "version": "0.2.0",
+  "description": "Deixa o bate-papo de Canal Aberto do Bitrix24 com cara de WhatsApp (tema, gravador, player e transcrição) e adiciona o botão Ligar por… com escolha de linha.",
+  "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "action": { "default_title": "Bitrix24 WhatsApp Skin", "default_popup": "options.html" },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["storage"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.bitrix24.com.br/*", "https://*.bitrix24.com/*"],
+      "css": ["content/theme.css", "content/ui.css"],
+      "js": ["content/ogg.js", "content/recorder.js", "content/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.bitrix24.com.br/*", "https://*.bitrix24.com/*"],
+      "css": ["content/caller.css"],
+      "js": ["content/caller-bridge.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://*.bitrix24.com.br/*", "https://*.bitrix24.com/*"],
+      "js": ["content/caller-main.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "world": "MAIN"
+    }
+  ]
+}
