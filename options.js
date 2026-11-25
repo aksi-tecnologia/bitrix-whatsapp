@@ -1,9 +1,9 @@
 const DEFAULTS = {
-  theme: true, recorder: true, player: true,
+  theme: true, recorder: true, recPreview: true, player: true,
   webhookUrl: '', webhookToken: '', postReply: true, autoTranscribe: false,
   callLines: null
 };
-const BOOLS = ['theme', 'recorder', 'player', 'postReply', 'autoTranscribe'];
+const BOOLS = ['theme', 'recorder', 'recPreview', 'player', 'postReply', 'autoTranscribe'];
 const TEXTS = ['webhookUrl', 'webhookToken'];
 const el = (id) => document.getElementById(id);
 

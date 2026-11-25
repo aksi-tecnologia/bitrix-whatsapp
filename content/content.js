@@ -9,6 +9,7 @@
   const DEFAULTS = {
     theme: true,
     recorder: true,
+    recPreview: true,
     player: true,
     webhookUrl: '',
     postReply: true,
@@ -179,6 +180,7 @@
 
   async function startRecording() {
     if (rec) return;
+    closePreview();
     const panel = $('.bx-im-send-panel__container');
     if (!panel) return;
     const r = new window.WABX_VoiceRecorder();
@@ -194,7 +196,7 @@
     const dot = h('span', { class: 'wabx-rec-dot' });
     const time = h('span', { class: 'wabx-rec-time', text: '0:00' });
     const canvas = h('canvas', { class: 'wabx-rec-wave', height: '32' });
-    const sendBtn = h('button', { type: 'button', class: 'wabx-rec-btn wabx-rec-send', title: 'Parar e anexar ao chat', html: ICON.send });
+    const sendBtn = h('button', { type: 'button', class: 'wabx-rec-btn wabx-rec-send', title: cfg.recPreview ? 'Parar e ouvir antes de enviar' : 'Parar e anexar ao chat', html: ICON.send });
     recBar = h('div', { class: 'wabx-rec-bar' }, [cancelBtn, dot, time, canvas, sendBtn]);
     panel.appendChild(recBar);
     cancelBtn.addEventListener('click', cancelRecording);
@@ -260,15 +262,85 @@
       return;
     }
     if (out.durationMs < 600) { toast('Gravação muito curta, descartada.'); return; }
+    if (cfg.recPreview && showPreview(out)) return;
+    attachToChat(out.file);
+  }
+
+  async function attachToChat(file) {
     try {
-      const how = await dropIntoChat(out.file);
+      const how = await dropIntoChat(file);
       if (!how) {
-        downloadFile(out.file);
+        downloadFile(file);
         toast('Não consegui soltar o áudio no chat — o arquivo foi baixado, arraste-o manualmente.', true);
       }
     } catch (e) {
       toast(e.message || String(e), true);
     }
+  }
+
+  // ---------- prévia: ouvir antes de enviar ----------
+  let preview = null; // { bar, audio, url }
+
+  function onPreviewKey(e) {
+    if (e.key === 'Escape' && preview) { e.stopPropagation(); closePreview(); }
+  }
+
+  function closePreview() {
+    if (!preview) return;
+    preview.audio.pause();
+    preview.bar.remove();
+    URL.revokeObjectURL(preview.url);
+    document.removeEventListener('keydown', onPreviewKey, true);
+    preview = null;
+  }
+
+  // devolve false se não há compositor (aí o áudio vai direto para o chat)
+  function showPreview(out) {
+    const panel = $('.bx-im-send-panel__container');
+    if (!panel) return false;
+    closePreview();
+    const url = URL.createObjectURL(out.file);
+    const audio = new Audio(url);
+    // o .ogg gerado aqui pode não informar a duração ao navegador: usa a da gravação
+    const total = out.durationMs / 1000;
+    const dur = () => (isFinite(audio.duration) && audio.duration > 0 ? audio.duration : total);
+
+    const cancelBtn = h('button', { type: 'button', class: 'wabx-rec-btn wabx-rec-cancel', title: 'Descartar (Esc)', html: ICON.trash });
+    const playBtn = h('button', { type: 'button', class: 'wabx-play', title: 'Ouvir', html: ICON.play });
+    const seek = h('input', { type: 'range', class: 'wabx-seek', min: '0', max: '1000', value: '0' });
+    const time = h('span', { class: 'wabx-time', text: fmt(total) });
+    const sendBtn = h('button', { type: 'button', class: 'wabx-rec-btn wabx-rec-send', title: 'Anexar ao chat', html: ICON.send });
+    const bar = h('div', { class: 'wabx-rec-bar wabx-rec-preview' }, [
+      cancelBtn, playBtn, h('div', { class: 'wabx-track' }, [seek, time]), sendBtn
+    ]);
+    panel.appendChild(bar);
+    preview = { bar, audio, url };
+    document.addEventListener('keydown', onPreviewKey, true);
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        $$('.wabx-player').forEach((p) => { if (p._wabxAudio) p._wabxAudio.pause(); });
+        audio.play().catch((e) => toast('Não foi possível reproduzir: ' + e.message, true));
+      } else audio.pause();
+    });
+    audio.addEventListener('play', () => { playBtn.innerHTML = ICON.pause; });
+    audio.addEventListener('pause', () => { playBtn.innerHTML = ICON.play; });
+    audio.addEventListener('ended', () => { seek.value = '0'; seek.style.setProperty('--wabx-p', '0%'); time.textContent = fmt(dur()); });
+    audio.addEventListener('timeupdate', () => {
+      const d = dur();
+      const p = d ? Math.min(1, audio.currentTime / d) : 0;
+      seek.value = String(Math.round(p * 1000));
+      seek.style.setProperty('--wabx-p', p * 100 + '%');
+      time.textContent = fmt(audio.currentTime);
+    });
+    seek.addEventListener('input', () => { audio.currentTime = (Number(seek.value) / 1000) * dur(); });
+    cancelBtn.addEventListener('click', closePreview);
+    sendBtn.addEventListener('click', () => {
+      const file = out.file;
+      closePreview();
+      attachToChat(file);
+    });
+    return true;
   }
 
   // ---------- player + transcrição ----------

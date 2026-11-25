@@ -29,6 +29,9 @@ html.wabx-on .bx-im-send-panel__container { position: relative; }
 .wabx-rec-time { min-width: 40px; font-variant-numeric: tabular-nums; }
 .wabx-rec-wave { flex: 1 1 auto; min-width: 60px; height: 32px; }
 @keyframes wabx-blink { 50% { opacity: .25; } }
+/* prévia do áudio gravado (ouvir antes de enviar) */
+.wabx-rec-preview { gap: 8px; }
+.wabx-rec-preview .wabx-track { padding-top: 14px; }
 
 /* player de áudio no balão */
 .wabx-audio-replaced { display: none !important; }
