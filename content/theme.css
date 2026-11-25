@@ -133,6 +133,17 @@ html.wabx-theme .bx-im-message-base__wrap.--system .bx-im-message-text-content__
   color: var(--wa-icon) !important;
   font-size: 12.5px !important;
 }
+/* o Bitrix pinta o número da sessão ("Conversa #97675 iniciada") de branco para a pílula escura
+   nativa; na pílula clara do tema ele sumia. Filhos herdam a cor, links ficam azuis. */
+html.wabx-theme .bx-imol-message-start-dialog__text *,
+html.wabx-theme .bx-im-message-base__wrap.--system .bx-im-message-default__container *:not(a) {
+  color: inherit !important;
+}
+html.wabx-theme .bx-imol-message-start-dialog__text a,
+html.wabx-theme .bx-im-message-base__wrap.--system .bx-im-message-default__container a {
+  color: var(--wa-link) !important;
+}
+
 /* balões */
 html.wabx-theme .bx-im-message-base__wrap {
   --im-message-base__background-color: var(--wa-in);
