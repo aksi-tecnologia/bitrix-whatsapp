@@ -130,3 +130,75 @@ el('save').addEventListener('click', async () => {
   }
   chrome.storage.sync.set(cfg, () => status('Salvo ✓'));
 });
+
+// ---------- procurar atualização (Releases do GitHub) ----------
+const REPO = 'aksi-tecnologia/bitrix-whatsapp';
+const RELEASES_URL = 'https://github.com/' + REPO + '/releases';
+
+function cmpVersion(a, b) {
+  const pa = String(a).replace(/^v/i, '').split(/[.-]/).map((n) => parseInt(n, 10) || 0);
+  const pb = String(b).replace(/^v/i, '').split(/[.-]/).map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d > 0 ? 1 : -1;
+  }
+  return 0;
+}
+
+function updStatus(msg, err) {
+  const s = el('updStatus');
+  s.textContent = msg;
+  s.className = err ? 'err' : '';
+}
+
+function link(href, text) {
+  const a = document.createElement('a');
+  a.href = href; a.textContent = text; a.target = '_blank'; a.rel = 'noopener';
+  return a;
+}
+
+const current = chrome.runtime.getManifest().version;
+el('curVersion').textContent = current;
+
+el('updBtn').addEventListener('click', async () => {
+  const btn = el('updBtn');
+  btn.disabled = true;
+  el('updBox').hidden = true;
+  updStatus('Procurando…');
+  try {
+    const resp = await fetch('https://api.github.com/repos/' + REPO + '/releases/latest', {
+      headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store'
+    });
+    if (resp.status === 404) {
+      updStatus('Nenhuma versão publicada encontrada. Se o repositório for privado, confira direto no GitHub.', true);
+      el('updLinks').replaceChildren(link(RELEASES_URL, 'Abrir Releases no GitHub'));
+      el('updTitle').textContent = '';
+      el('updNotes').textContent = '';
+      el('updBox').hidden = false;
+      return;
+    }
+    if (resp.status === 403 || resp.status === 429) throw new Error('o GitHub limitou as consultas, tente de novo em alguns minutos');
+    if (!resp.ok) throw new Error('GitHub respondeu HTTP ' + resp.status);
+    const rel = await resp.json();
+    const latest = String(rel.tag_name || rel.name || '').replace(/^v/i, '');
+    if (!latest) throw new Error('Release sem número de versão');
+
+    if (cmpVersion(latest, current) <= 0) {
+      updStatus('Você já está na versão mais recente (' + current + ').');
+      return;
+    }
+    updStatus('');
+    const zip = (rel.assets || []).find((a) => /\.zip$/i.test(a.name));
+    el('updTitle').textContent = 'Nova versão disponível: ' + latest;
+    el('updNotes').textContent = String(rel.body || '').split(/\n---\n/)[0].trim() || 'Sem notas para esta versão.';
+    const links = [];
+    if (zip) links.push(link(zip.browser_download_url, 'Baixar ' + zip.name));
+    links.push(link(rel.html_url || RELEASES_URL, 'Ver no GitHub'));
+    el('updLinks').replaceChildren(...links);
+    el('updBox').hidden = false;
+  } catch (e) {
+    updStatus('Não foi possível procurar: ' + (e.message || e), true);
+  } finally {
+    btn.disabled = false;
+  }
+});

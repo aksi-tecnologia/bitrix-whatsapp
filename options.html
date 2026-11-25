@@ -23,6 +23,14 @@
   #lines li span { flex: 1 1 auto; }
   #lines li button { margin: 0; padding: 2px 8px; border-radius: 6px; background: #f0f2f5; color: #54656f; font-weight: 400; }
   #lines li.off span { color: #8696a0; text-decoration: line-through; }
+  .upd { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .upd button { margin-top: 0; }
+  #updStatus.err { color: #c0392b; }
+  #updBox { margin-top: 10px; padding: 10px 12px; border: 1px solid #d1d7db; border-radius: 8px; background: #f7f8fa; }
+  #updBox[hidden] { display: none; }
+  #updBox h3 { margin: 0 0 6px; font-size: 14px; color: #008069; }
+  #updNotes { white-space: pre-wrap; font-size: 13px; color: #3b4a54; max-height: 220px; overflow: auto; margin: 6px 0; }
+  #updLinks a { margin-right: 14px; color: #027eb5; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -59,6 +67,19 @@
   <label class="row"><input type="checkbox" id="autoTranscribe"> Transcrever automaticamente áudios do cliente recebidos hoje (os mais antigos, só pelo botão)</label>
 
   <button id="save">Salvar</button><span id="status"></span>
+
+  <h2>Atualizações</h2>
+  <div class="upd">
+    <span>Versão instalada: <b id="curVersion">–</b></span>
+    <button id="updBtn" type="button">Procurar atualização</button>
+    <span id="updStatus"></span>
+  </div>
+  <div id="updBox" hidden>
+    <h3 id="updTitle"></h3>
+    <div id="updNotes"></div>
+    <div id="updLinks"></div>
+    <small>Para instalar: baixe o zip, descompacte por cima da pasta da extensão, abra <code>chrome://extensions</code> e clique em recarregar na extensão.</small>
+  </div>
   <script src="options.js"></script>
 </body>
 </html>

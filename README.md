@@ -5,7 +5,7 @@ Extensão para Google Chrome (Manifest V3) que melhora o Bitrix24 em duas frente
 1. **Bate-papo de Canal Aberto com cara de WhatsApp**: tema, gravador de áudio, player com velocidade e transcrição de áudios via webhook (n8n).
 2. **Botão "Ligar por…"**: liga para o cliente escolhendo a linha de saída (0800, 6642, app VoIP…), sem depender da linha padrão do portal.
 
-Versão atual: **0.2.1** (veja o [Histórico de versões](#histórico-de-versões)).
+Versão atual: **0.2.2** (veja o [Histórico de versões](#histórico-de-versões)).
 
 ---
 
@@ -26,7 +26,9 @@ Versão atual: **0.2.1** (veja o [Histórico de versões](#histórico-de-versõe
 
 ### Atualizar
 
-Baixe a versão nova por cima da pasta (ou `git pull`), volte em `chrome://extensions` e clique no ícone de recarregar da extensão. Depois recarregue as abas do Bitrix24. As configurações são mantidas.
+Nas opções da extensão, em **Atualizações**, clique em **Procurar atualização**. Se houver versão nova, aparecem as novidades e o link do zip. A consulta usa a API pública do GitHub; se o repositório for privado, ela não encontra as Releases e mostra o link para conferir no GitHub.
+
+Para instalar, baixe a versão nova por cima da pasta (ou `git pull`), volte em `chrome://extensions` e clique no ícone de recarregar da extensão. Depois recarregue as abas do Bitrix24. As configurações são mantidas.
 
 ## Configuração
 

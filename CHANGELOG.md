@@ -6,6 +6,11 @@ Release é a seção da versão neste arquivo, então escreva aqui o que mudou
 
 Formato: `## [x.y.z] - AAAA-MM-DD`, seguido da lista de mudanças.
 
+## [0.2.2] - 2026-11-25
+
+### Novo
+- Botão "Procurar atualização" nas opções: consulta a última Release no GitHub, compara com a versão instalada e mostra o que há de novo e o link do zip.
+
 ## [0.2.1] - 2026-11-25
 
 ### Novo
