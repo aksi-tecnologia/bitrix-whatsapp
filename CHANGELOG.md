@@ -6,6 +6,13 @@ Release é a seção da versão neste arquivo, então escreva aqui o que mudou
 
 Formato: `## [x.y.z] - AAAA-MM-DD`, seguido da lista de mudanças.
 
+## [0.2.3] - 2026-11-25
+
+### Novo
+- Opção "Reorganizar a lista" dos Canais Abertos (desligada por padrão): conversas aguardando resposta no topo, a que espera há mais tempo primeiro; as demais pela última mensagem. Um ponto colorido no avatar mostra o status.
+  - Só atua com a pasta Canais Abertos selecionada e desfaz tudo ao desligar ou trocar de pasta.
+  - Não move elementos do Bitrix (usa a ordem visual do CSS), então cliques, rolagem e o carregamento de mais conversas continuam funcionando.
+
 ## [0.2.2] - 2026-11-25
 
 ### Novo

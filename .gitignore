@@ -8,3 +8,6 @@ _backup-*/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# extensões de referência (só para análise local)
+_ref/

@@ -5,7 +5,7 @@ Extensão para Google Chrome (Manifest V3) que melhora o Bitrix24 em duas frente
 1. **Bate-papo de Canal Aberto com cara de WhatsApp**: tema, gravador de áudio, player com velocidade e transcrição de áudios via webhook (n8n).
 2. **Botão "Ligar por…"**: liga para o cliente escolhendo a linha de saída (0800, 6642, app VoIP…), sem depender da linha padrão do portal.
 
-Versão atual: **0.2.2** (veja o [Histórico de versões](#histórico-de-versões)).
+Versão atual: **0.2.3** (veja o [Histórico de versões](#histórico-de-versões)).
 
 ---
 
@@ -43,6 +43,7 @@ Clique no ícone da extensão (ou em **Detalhes → Opções da extensão**). Tu
 | URL do webhook (n8n) | Endereço que recebe o áudio para transcrever | vazio |
 | Token (opcional) | Enviado como `Authorization: Bearer <token>` | vazio |
 | Responder com a transcrição em mensagem oculta | Grava o texto no chat como mensagem de sistema, visível só para a equipe | ligado |
+| Reorganizar a lista dos Canais Abertos | Aguardando resposta no topo (quem espera há mais tempo primeiro), depois as demais pela última mensagem. Só com a pasta Canais Abertos selecionada | desligado |
 | Transcrever automaticamente | Transcreve sozinho os áudios do cliente recebidos **hoje**; os mais antigos só pelo botão | desligado |
 | Linhas no menu "Ligar por…" | Esconde linhas e muda a ordem do menu | todas, na ordem do Bitrix |
 | Ligar para qualquer número | Discador livre: escolhe a linha e liga | — |
@@ -128,6 +129,7 @@ content/
   caller-main.js         botão "Ligar por…" (roda no contexto da página, world MAIN, em todos os frames)
   caller-bridge.js       ponte entre a página e as opções da extensão (linhas, discador)
   caller.css             estilo do botão e do menu de linhas
+  reorder.js / .css      reorganização da lista dos Canais Abertos
 ```
 
 ## Solução de problemas

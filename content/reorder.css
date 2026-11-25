@@ -1,0 +1,13 @@
+/* reorganização dos Canais Abertos (content/reorder.js) */
+.bx-imol-list-recent__scroll-container.wabx-ro-flat { display: flex !important; flex-direction: column !important; }
+.wabx-ro-contents { display: contents !important; }
+.wabx-ro-hide { display: none !important; }
+.bx-imol-list-recent-item__avatar_container.wabx-ro { position: relative !important; }
+.wabx-st-dot {
+  position: absolute; right: -1px; bottom: -1px; z-index: 5; pointer-events: none;
+  width: 11px; height: 11px; border-radius: 50%; box-sizing: content-box;
+  border: 2px solid var(--ui-color-bg-content, #fff);
+}
+.wabx-st-wait { background: #e02d2d; }
+.wabx-st-work { background: #00a884; }
+.wabx-st-done { background: #9aa3b1; }
